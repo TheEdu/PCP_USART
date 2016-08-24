@@ -1,0 +1,27 @@
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 12 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 13 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 14 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 15 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 17 : Found directive in column 1. (ORG)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 44 : Found label after column 1. (WaitingConvertion)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 58 : Found opcode in column 1. (goto)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 81 : Using default destination of 1 (file).
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 120 : Found label after column 1. (cont_delay)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 121 : Using default destination of 1 (file).
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 123 : Using default destination of 1 (file).
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 125 : Found opcode in column 1. (return)
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 148 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 149 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 154 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 156 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 157 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 158 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 159 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 160 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 179 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 180 : Using default destination of 1 (file).
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 180 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 187 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 210 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 224 : Found opcode in column 1. (return)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART\EDU.ASM 225 : Found directive in column 1. (end)

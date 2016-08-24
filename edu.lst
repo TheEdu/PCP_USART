@@ -1,0 +1,691 @@
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;edu tp pcp-usart (KAIZEN)
+                      00002 #include <P16F877.INC>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877 processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2011 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00528         LIST
+                      00003 
+  00000022            00004 contTA  EQU 0X22 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
+  00000023            00005 BIN     EQU 0X23 ; resultado de la conversion del ADC (convertion result)
+  00000024            00006 BCDH    EQU     0x24
+  00000025            00007 BCDM    EQU     0x25
+  00000026            00008 BCDL    EQU     0x26
+  00000027            00009 reg1    EQU     0x27
+  00000028            00010 reg2    EQU     0X28
+                      00011 
+Warning[205]: Found directive in column 1. (ORG)
+                      00012 ORG 0X0000
+Warning[203]: Found opcode in column 1. (goto)
+0000   2???           00013 goto inicio
+Warning[205]: Found directive in column 1. (ORG)
+                      00014 ORG 0x0004
+Warning[203]: Found opcode in column 1. (goto)
+0004   2???           00015 goto isr
+                      00016 
+Warning[205]: Found directive in column 1. (ORG)
+                      00017 ORG 0x0005
+0005                  00018 inicio
+0005   2???           00019         call init
+0006   2???           00020         call main
+                      00021 
+                      00022 
+                      00023 ;PROGRAMA PRINCIPAL
+0007                  00024 main
+                      00025 
+                      00026         ;Pagina 00 (BANK 0)
+0007   1283           00027         bcf     STATUS,RP0
+0008   1303           00028         bcf     STATUS,RP1
+                      00029                 
+                      00030         ;Esperando el Tiempo de Adquisicion para iniciar la conversion
+                      00031         ;20us delay loop with 4MHz oscillator frequency
+                      00032         ;movlw 0x06
+                      00033         ;movwf contTA ;initialize count
+                      00034         ;loop
+                      00035         ;       decfsz contTA,F ;dec count, store in count
+                      00036         ;goto loop ;not finished
+                      00037 
+                      00038         ;Empezando la conversion
+0009   151F           00039         bsf     ADCON0,GO ;GO/DONE: A/D Conversion Status bit, 1 = A/D conversion in progress
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00040                                   ;(Setting this bit starts the A/D conversion. This bit is automaticall
+                            y cleared
+                      00041                                   ;by hardware when the A/D conversion is complete), 0 = A/D conversion 
+                            not in progress
+                      00042 
+                      00043         ;Esperando a que el ADC termine la conversion del valor analogico preveniente del potenciometro
+Warning[207]: Found label after column 1. (WaitingConvertion)
+000A                  00044         WaitingConvertion
+000A   191F           00045                 btfsc ADCON0,GO ;conversion done?
+000B   2???           00046         goto WaitingConvertion ;not finished
+                      00047 
+                      00048         ;Once the analog-to-digital conversion has completed, the result can be read. The
+                      00049         ;result of the conversion is automatically placed in the ADRES register upon
+                      00050         ;completion.
+000C   081E           00051         movf ADRESH,w
+000D   00A3           00052         movwf BIN ; Guardo el resultado de la conversion en BIN (para su posterior procesamiento)
+                      00053         
+000E   2???           00054         call convert_dato
+000F   2???           00055         call env_dato
+                      00056         ;call delay
+                      00057 
+Warning[203]: Found opcode in column 1. (goto)
+0010   2???           00058 goto main
+                      00059 
+0011                  00060 convert_dato
+0011   01A4           00061         clrf    BCDH
+0012   01A5           00062         clrf    BCDM
+0013   01A6           00063         clrf    BCDL
+0014                  00064 BCD_HIGH
+0014   3064           00065         movlw   d'100'
+0015   02A3           00066         subwf   BIN,f
+0016   1C03           00067         btfss   STATUS,C        ; si esta seteado no hubo BORROW
+0017   2???           00068         goto    SUMA_100        ; si hubo BORROW entonces el numero que quedaba era menor a 100
+0018   0AA4           00069         incf    BCDH,f
+0019   2???           00070         goto    BCD_HIGH
+001A                  00071 SUMA_100
+001A   3064           00072         movlw   d'100'
+001B   07A3           00073         addwf   BIN,f
+001C   2???           00074                 goto    BCD_LOW 
+                      00075 
+001D                  00076 BCD_LOW 
+001D   300A           00077                 movlw   d'10'
+001E   02A3           00078         subwf   BIN,f
+001F   1C03           00079         btfss   STATUS,C   ; si esta seteado no hubo BORROW
+0020   2???           00080         goto    SUMA_10
+Message[305]: Using default destination of 1 (file).
+0021   0AA5           00081         incf    BCDM
+0022   2???           00082         goto    BCD_LOW
+                      00083 
+0023                  00084 SUMA_10 
+0023   300A           00085                 movlw   d'10'
+0024   07A3           00086         addwf   BIN,f
+0025   0823           00087         movf    BIN,w
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0026   00A6           00088         movwf   BCDL
+0027   0008           00089         return 
+                      00090  
+0028                  00091 env_dato
+0028   3008           00092                 movlw   d'8'
+0029   2???           00093                 call    transmitir
+002A   2???           00094                 call    transmitir
+002B   2???           00095                 call    transmitir
+002C   3024           00096                 movlw   BCDH
+002D   0084           00097                 movwf   FSR
+002E                  00098 continuar 
+002E   0800           00099                 movf    INDF,w
+002F   3E30           00100                 addlw   0x30
+0030   2???           00101                 call    transmitir
+0031   0A84           00102                 incf    FSR,f
+0032   1D84           00103                 btfss   FSR,3
+0033   2???           00104                 goto    continuar       
+0034   0008           00105                 return
+                      00106 
+0035                  00107 transmitir
+0035   0099           00108                 movwf   TXREG
+0036                  00109 esp_envio
+0036   1E0C           00110                 btfss   PIR1, TXIF
+0037   2???           00111                 goto    esp_envio
+0038   120C           00112                 bcf             PIR1, TXIF
+0039   0008           00113                 return
+                      00114                 
+                      00115                 
+                      00116                 
+003A                  00117 delay
+003A   01A7           00118         clrf reg1
+003B   01A8           00119         clrf reg2
+Warning[207]: Found label after column 1. (cont_delay)
+003C                  00120         cont_delay      
+Message[305]: Using default destination of 1 (file).
+003C   0FA7           00121                 incfsz reg1
+003D   2???           00122                 goto cont_delay
+Message[305]: Using default destination of 1 (file).
+003E   0FA8           00123                 incfsz reg2
+003F   2???           00124                 goto cont_delay
+Warning[203]: Found opcode in column 1. (return)
+0040   0008           00125 return   
+                      00126 
+0041                  00127 isr
+0041   138B           00128         bcf             INTCON,GIE
+0042   1E8C           00129         btfss   PIR1,RCIF       ; si fue una interrupcion de recepcion  saltamos la sig instruccion
+0043   2???           00130         goto    fin_isr
+0044   128C           00131         bcf             PIR1,RCIF       ; si se recibio un dato limpio la bandera de la int
+0045   2???           00132         goto    fin_isr
+                      00133 
+0046                  00134 fin_isr
+0046   178B           00135         bsf             INTCON,GIE      
+0047   0009           00136         retfie  
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00137 
+                      00138 
+                      00139 
+0048                  00140 init
+                      00141 
+                      00142 ;INICIALIZACION PUERTO SERIE (USART)
+                      00143 
+                      00144         ;Pagina 01 (BANK 1)
+0048   1683           00145         bsf     STATUS,RP0
+0049   1303           00146         bcf     STATUS,RP1
+                      00147         ;TX y RX
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004A   1307           00148         bcf     TRISC,6 ;TX como salida  (OUTPUT)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004B   1787           00149         bsf     TRISC,7 ;RX como entrada (INPUT)
+                      00150         ;The rate at which data is transmitted or received must be always be set using the
+                      00151         ;baud rate generator unless the USART is being used in synchronous slave mode.
+                      00152         ;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
+004C   3019           00153         movlw   d'25'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004D   0099           00154         movwf   SPBRG   ; 9600 baudios en high speed con 4MHz
+                      00155         ;Configuro el TXSTA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004E   0198           00156     clrf TXSTA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004F   1498           00157         bsf TXSTA,TRMT  ;TRMT: Transmit Shift Register Status bit, 1 = TSR empty
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0050   1518           00158         bsf TXSTA,BRGH  ;High speed
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0051   1698           00159         bsf TXSTA,TXEN  ;Transmision habilitada
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0052   1798           00160         bsf TXSTA,CSRC  ;El manual dice que no importa (en modo asincronico) pero jose lo puso en 1 no s
+                            e porque
+                      00161         
+                      00162         ;Pagina 00 (BANK 0)
+0053   1283           00163         bcf     STATUS,RP0
+0054   1303           00164         bcf     STATUS,RP1
+                      00165         ;Configuro el RCSTA
+0055   0198           00166         clrf RCSTA
+0056   1798           00167         bsf RCSTA,SPEN ; Serial Port Enable
+0057   1618           00168         bsf RCSTA,CREN ; Continuous receive enable
+                      00169 
+                      00170 ;FIN INICIALIZACION PUERTO SERIE (USART)
+                      00171 
+                      00172 
+                      00173 ;INICIALIZACION DE ADC
+                      00174 
+                      00175         ;Pagina 01 (BANK 1)
+0058   1683           00176         bsf     STATUS,RP0
+0059   1303           00177         bcf     STATUS,RP1
+                      00178         ;TRISA d'11111111' --> INPUT
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005A   0185           00179         clrf    TRISA
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[305]: Using default destination of 1 (file).
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005B   0985           00180         comf    TRISA
+                      00181         ;All pins used for analog-to-digital conversion should also be configured as analog
+                      00182         ;pins. The value in the ADCON1 register determines if pins are configured as
+                      00183         ;analog or digital, and the source of the analog-to-digital converter voltage
+                      00184         ;references.
+                      00185         ;Configuro todos como entradas analogicas (A,A,A,A,A,A,A,A)
+005C   3000           00186         movlw   0x00
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005D   009F           00187         movwf   ADCON1
+                      00188 
+                      00189         ;The input channel and the analog-to-digital converter clock are selected, and the
+                      00190         ;converter is enabled, by the options selected in the ADCON0 register. 
+                      00191         ;Pagina 00 (BANK 0)
+005E   1283           00192         bcf     STATUS,RP0
+005F   1303           00193         bcf     STATUS,RP1
+                      00194         ;Configuro el ADCON0 en b'01000001'
+                      00195         ;bit 7:6 ADCS1:ADCS0: A/D Conversion Clock Select bits: 00 = FOSC/2, 01 = FOSC/8, 10 = FOSC/32, 
+                            11 = FRC (clock derived from the internal A/D RC oscillator)
+                      00196         ;The analog-to-digital converter clock is selected as the main
+                      00197         ;oscillator frequency divided by eight, the input channel selected is channel zero, and
+                      00198         ;the converter is being enabled. 
+0060   3041           00199         movlw b'01000001'
+0061   009F           00200         movwf ADCON0
+                      00201 
+                      00202 ;FIN INICIALIZACION ADC
+                      00203 
+                      00204 ; INICIALIZACION DE INTERRUPCIONES
+                      00205 
+                      00206         ;Pagina 01 (BANK 1)
+0062   1683           00207         bsf     STATUS,RP0
+0063   1303           00208         bcf     STATUS,RP1
+                      00209         ;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al re
+                            cibir un dato. 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0064   168C           00210         bsf             PIE1, RCIE      ;Habilito int de recepcion
+                      00211  
+                      00212         ;Pagina 00 (BANK 0)
+0065   1283           00213         bcf     STATUS,RP0
+0066   1303           00214         bcf     STATUS,RP1
+0067   170B           00215         bsf             INTCON, PEIE    ; habilito int de perifericos
+0068   178B           00216         bsf             INTCON, GIE             ; habilito int global   
+                      00217 
+                      00218 ; FIN INICIALIZACION DE INTERRUPCIONES
+                      00219 
+0069   3000           00220         movlw 0x00
+006A   00A3           00221         movwf BIN
+                      00222 
+                      00223 ;FIN INIT
+Warning[203]: Found opcode in column 1. (return)
+006B   0008           00224 return
+Warning[205]: Found directive in column 1. (end)
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00225 end
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCDH                              00000024
+BCDL                              00000026
+BCDM                              00000025
+BCD_HIGH                          00000014
+BCD_LOW                           0000001D
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BIN                               00000023
+BRGH                              00000002
+C                                 00000000
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CKE                               00000006
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKP                               00000004
+CREN                              00000004
+CSRC                              00000007
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SUMA_10                           00000023
+SUMA_100                          0000001A
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+WaitingConvertion                 0000000A
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_All                           00000FCF
+_CP_HALF                          00001FDF
+_CP_OFF                           00003FFF
+_CP_UPPER_256                     00002FEF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+MPASM  5.40                           EDU.ASM   8-24-2016  20:01:54         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_ENABLE_OFF                   00003DFF
+_WRT_ENABLE_ON                    00003FFF
+_XT_OSC                           00003FFD
+__16F877                          00000001
+__DEBUG                           1
+contTA                            00000022
+cont_delay                        0000003C
+continuar                         0000002E
+convert_dato                      00000011
+delay                             0000003A
+env_dato                          00000028
+esp_envio                         00000036
+fin_isr                           00000046
+inicio                            00000005
+init                              00000048
+isr                               00000041
+main                              00000007
+reg1                              00000027
+reg2                              00000028
+transmitir                        00000035
+
+Errors   :     0
+Warnings :    11 reported,     0 suppressed
+Messages :    16 reported,     0 suppressed
+
+

@@ -1,0 +1,67 @@
+MPLINK 4.38, Linker
+Linker Map File - Created Wed Aug 24 20:01:55 2016
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000002
+                   .org_2       code   0x000005    program   0x0000ce
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x00006b      
+            107 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 BCD_HIGH   0x000014    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                  BCD_LOW   0x00001d    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                  SUMA_10   0x000023    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                 SUMA_100   0x00001a    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+        WaitingConvertion   0x00000a    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+               cont_delay   0x00003c    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                continuar   0x00002e    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+             convert_dato   0x000011    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                    delay   0x00003a    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                 env_dato   0x000028    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                esp_envio   0x000036    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                  fin_isr   0x000046    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                   inicio   0x000005    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                     init   0x000048    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                      isr   0x000041    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                     main   0x000007    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+               transmitir   0x000035    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   inicio   0x000005    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                     main   0x000007    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+        WaitingConvertion   0x00000a    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+             convert_dato   0x000011    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                 BCD_HIGH   0x000014    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                 SUMA_100   0x00001a    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                  BCD_LOW   0x00001d    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                  SUMA_10   0x000023    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                 env_dato   0x000028    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                continuar   0x00002e    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+               transmitir   0x000035    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                esp_envio   0x000036    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                    delay   0x00003a    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+               cont_delay   0x00003c    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                      isr   0x000041    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                  fin_isr   0x000046    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+                     init   0x000048    program     static C:\Users\edu\Desktop\PCP_USART\edu.asm
+
+
