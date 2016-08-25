@@ -1,13 +1,13 @@
 ;edu tp pcp-usart (KAIZEN)
 #include <P16F877.INC>
 
-contTA  EQU 0X22 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
-BIN 	EQU 0X23 ; resultado de la conversion del ADC (convertion result)
-BCDH	EQU	0x24
-BCDM	EQU	0x25
-BCDL	EQU	0x26
-reg1	EQU	0x27
-reg2	EQU	0X28
+contTA  EQU 0X23 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
+BIN 	EQU 0X24 ; resultado de la conversion del ADC (convertion result)
+BCDH	EQU	0x25
+BCDM	EQU	0x26
+BCDL	EQU	0x27
+reg1	EQU	0x28
+reg2	EQU	0X29
 
 ORG 0X0000
 goto inicio
@@ -29,11 +29,11 @@ main
 		
 	;Esperando el Tiempo de Adquisicion para iniciar la conversion
 	;20us delay loop with 4MHz oscillator frequency
-	;movlw 0x06
-	;movwf contTA ;initialize count
-	;loop
-	;	decfsz contTA,F ;dec count, store in count
-	;goto loop ;not finished
+	movlw 0x06
+	movwf contTA ;initialize count
+	loop
+		decfsz contTA,F ;dec count, store in count
+	goto loop ;not finished
 
 	;Empezando la conversion
 	bsf	ADCON0,GO ;GO/DONE: A/D Conversion Status bit, 1 = A/D conversion in progress
@@ -53,7 +53,7 @@ main
 	
 	call convert_dato
  	call env_dato
- 	;call delay
+ 	call delay
 
 goto main
 
