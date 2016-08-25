@@ -1,0 +1,37 @@
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 12 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 13 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 14 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 15 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 17 : Found directive in column 1. (ORG)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 34 : Found label after column 1. (loop)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 44 : Found label after column 1. (WaitingConvertion)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 58 : Found opcode in column 1. (goto)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 64 : Found label after column 1. (BCD_HIGH)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 71 : Found label after column 1. (SUMA_100)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 76 : Found label after column 1. (BCD_LOW)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 81 : Using default destination of 1 (file).
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 83 : Found label after column 1. (SUMA_10)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 89 : Found opcode in column 1. (return)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 99 : Found label after column 1. (continuar)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 106 : Found opcode in column 1. (return)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 110 : Found label after column 1. (esp_envio)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 114 : Found opcode in column 1. (return)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 120 : Found label after column 1. (cont_delay)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 121 : Using default destination of 1 (file).
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 123 : Using default destination of 1 (file).
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 125 : Found opcode in column 1. (return)
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 148 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 149 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 154 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 156 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 157 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 158 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 159 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 160 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 179 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 180 : Using default destination of 1 (file).
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 180 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 187 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 210 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 220 : Found opcode in column 1. (return)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\TRANSMISOR.ASM 221 : Found directive in column 1. (end)

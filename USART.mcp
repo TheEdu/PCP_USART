@@ -33,7 +33,7 @@ file_001=no
 file_000=no
 file_001=no
 [FILE_INFO]
-file_000=edu.asm
+file_000=transmisor.asm
 file_001=C:\Program Files (x86)\Microchip\MPASM Suite\P16F877.INC
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}

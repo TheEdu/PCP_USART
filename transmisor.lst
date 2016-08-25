@@ -1,4 +1,4 @@
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  1
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Warning[207]: Found label after column 1. (loop)
 000C   2???           00036         goto loop ;not finished
                       00037 
                       00038         ;Empezando la conversion
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  2
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Message[305]: Using default destination of 1 (file).
 0026   0AA6           00081         incf    BCDM
 0027   2???           00082         goto    BCD_LOW
 Warning[207]: Found label after column 1. (SUMA_10)
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  3
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ Message[305]: Using default destination of 1 (file).
 Warning[203]: Found opcode in column 1. (return)
 0046   0008           00125 return   
                       00126 
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  4
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 005D   1618           00168         bsf RCSTA,CREN ; Continuous receive enable
                       00169 
                       00170 ;FIN INICIALIZACION PUERTO SERIE (USART)
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  5
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -293,7 +293,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 006C   1303           00214         bcf     STATUS,RP1
 006D   170B           00215         bsf             INTCON, PEIE    ; habilito int de perifericos
 006E   178B           00216         bsf             INTCON, GIE             ; habilito int global   
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  6
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -301,16 +301,12 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 
                       00217 
                       00218 ; FIN INICIALIZACION DE INTERRUPCIONES
-                      00219 
-006F   3000           00220         movlw 0x00
-0070   00A4           00221         movwf BIN
-                      00222 
-                      00223 ;FIN INIT
+                      00219 ;FIN INIT
 Warning[203]: Found opcode in column 1. (return)
-0071   0008           00224 return
+006F   0008           00220 return
 Warning[205]: Found directive in column 1. (end)
-                      00225 end
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  7
+                      00221 end
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  7
 
 
 SYMBOL TABLE
@@ -369,7 +365,7 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CKE                               00000006
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  8
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  8
 
 
 SYMBOL TABLE
@@ -428,7 +424,7 @@ NOT_W                             00000002
 NOT_WRITE                         00000002
 OBF                               00000006
 OERR                              00000001
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE  9
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE  9
 
 
 SYMBOL TABLE
@@ -487,7 +483,7 @@ RC4                               00000004
 RC5                               00000005
 RC6                               00000006
 RC7                               00000007
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE 10
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE 10
 
 
 SYMBOL TABLE
@@ -546,7 +542,7 @@ SUMA_100                          0000001F
 SYNC                              00000004
 T0CS                              00000005
 T0IE                              00000005
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE 11
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE 11
 
 
 SYMBOL TABLE
@@ -605,7 +601,7 @@ TRISC4                            00000004
 TRISC5                            00000005
 TRISC6                            00000006
 TRISC7                            00000007
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE 12
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE 12
 
 
 SYMBOL TABLE
@@ -664,7 +660,7 @@ _LVP_OFF                          00003F7F
 _LVP_ON                           00003FFF
 _PWRTE_OFF                        00003FFF
 _PWRTE_ON                         00003FF7
-MPASM  5.40                           EDU.ASM   8-25-2016  0:32:46         PAGE 13
+MPASM  5.40                    TRANSMISOR.ASM   8-25-2016  15:54:57         PAGE 13
 
 
 SYMBOL TABLE
