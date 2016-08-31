@@ -1,0 +1,29 @@
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 12 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 13 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 14 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 15 : Found opcode in column 1. (call)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 17 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 35 : Found opcode in column 1. (goto)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 54 : Found label after column 1. (BCD_HIGH)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 61 : Found label after column 1. (SUMA_100)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 66 : Found label after column 1. (BCD_LOW)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 71 : Using default destination of 1 (file).
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 73 : Found label after column 1. (SUMA_10)
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 79 : Found opcode in column 1. (return)
+Warning[207] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 85 : Found label after column 1. (cont_delay)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 86 : Using default destination of 1 (file).
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 88 : Using default destination of 1 (file).
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 90 : Found opcode in column 1. (return)
+Message[305] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 158 : Using default destination of 1 (file).
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 162 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 163 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 173 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 174 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 179 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 181 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 182 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 183 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 184 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 203 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 215 : Found opcode in column 1. (return)
+Warning[205] C:\USERS\EDU\DESKTOP\PCP_USART_GIT\PCP_USART\RECEPTOR.ASM 216 : Found directive in column 1. (end)

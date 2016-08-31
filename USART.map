@@ -1,5 +1,5 @@
 MPLINK 4.38, Linker
-Linker Map File - Created Thu Aug 25 15:54:58 2016
+Linker Map File - Created Wed Aug 31 05:33:20 2016
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -7,7 +7,7 @@ Linker Map File - Created Thu Aug 25 15:54:58 2016
                    .org_0       code   0x000000    program   0x000002
                    .cinit    romdata   0x000001    program   0x000004
                    .org_1       code   0x000004    program   0x000002
-                   .org_2       code   0x000005    program   0x0000d6
+                   .org_2       code   0x000005    program   0x0000e4
 
 
 
@@ -15,32 +15,34 @@ Linker Map File - Created Thu Aug 25 15:54:58 2016
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000002      
-                            0x000004    0x00006f      
-            111 out of 8454 program addresses used, program memory utilization is 1%
+                            0x000004    0x000076      
+            118 out of 8454 program addresses used, program memory utilization is 1%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                 BCD_HIGH   0x000019    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                  BCD_LOW   0x000022    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                  SUMA_10   0x000028    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                 SUMA_100   0x00001f    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                 BCD_HIGH   0x000018    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                  BCD_LOW   0x000021    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                  SUMA_10   0x000027    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                 SUMA_100   0x00001e    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
         WaitingConvertion   0x00000e    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                cont_delay   0x000042    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                continuar   0x000034    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-             convert_dato   0x000016    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                continuar   0x000033    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+             convert_dato   0x000015    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                     delay   0x000040    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                 env_dato   0x00002d    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                esp_envio   0x00003c    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                  fin_isr   0x00004c    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                 env_dato   0x00002c    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                esp_envio   0x00003b    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                  fin_isr   0x000053    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                    inicio   0x000005    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                     init   0x00004e    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                     init   0x000055    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                       isr   0x000047    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                      loop   0x00000b    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                      main   0x000007    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-               transmitir   0x00003b    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+               recibiAlgo   0x00004f    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+            transmitiAlgo   0x000051    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+               transmitir   0x00003a    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
 
 
 
@@ -51,19 +53,21 @@ Linker Map File - Created Thu Aug 25 15:54:58 2016
                      main   0x000007    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                      loop   0x00000b    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
         WaitingConvertion   0x00000e    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-             convert_dato   0x000016    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                 BCD_HIGH   0x000019    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                 SUMA_100   0x00001f    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                  BCD_LOW   0x000022    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                  SUMA_10   0x000028    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                 env_dato   0x00002d    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                continuar   0x000034    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-               transmitir   0x00003b    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                esp_envio   0x00003c    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+             convert_dato   0x000015    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                 BCD_HIGH   0x000018    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                 SUMA_100   0x00001e    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                  BCD_LOW   0x000021    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                  SUMA_10   0x000027    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                 env_dato   0x00002c    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                continuar   0x000033    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+               transmitir   0x00003a    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                esp_envio   0x00003b    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                     delay   0x000040    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                cont_delay   0x000042    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
                       isr   0x000047    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                  fin_isr   0x00004c    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
-                     init   0x00004e    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+               recibiAlgo   0x00004f    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+            transmitiAlgo   0x000051    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                  fin_isr   0x000053    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
+                     init   0x000055    program     static C:\Users\edu\Desktop\PCP_USART_git\PCP_USART\transmisor.asm
 
 

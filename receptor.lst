@@ -1,10 +1,10 @@
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  1
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ;edu tp pcp-usart transmisor (KAIZEN)
+                      00001 ;edu tp pcp-usart (KAIZEN)
                       00002 #include <P16F877.INC>
                       00001         LIST
                       00002 
@@ -15,315 +15,275 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00007 ;==========================================================================
                       00008 
                       00528         LIST
-  00000023            00003 contTA  EQU 0X23 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
-  00000024            00004 BIN     EQU 0X24 ; resultado de la conversion del ADC (convertion result)
-  00000025            00005 BCDH    EQU     0x25
-  00000026            00006 BCDM    EQU     0x26
-  00000027            00007 BCDL    EQU     0x27
-  00000028            00008 reg1    EQU     0x28
-  00000029            00009 reg2    EQU     0X29
-                      00010 
+                      00003 
+  00000023            00004 contTA  EQU 0X23 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
+  00000024            00005 BIN     EQU 0X24 ; resultado de la conversion del ADC (convertion result)
+  00000025            00006 BCDH    EQU     0x25
+  00000026            00007 BCDM    EQU     0x26
+  00000027            00008 BCDL    EQU     0x27
+  00000028            00009 reg1    EQU     0x28
+  00000029            00010 reg2    EQU     0X29
+                      00011 
 Warning[205]: Found directive in column 1. (ORG)
-                      00011 ORG 0X0000
+                      00012 ORG 0X0000
 Warning[203]: Found opcode in column 1. (goto)
-0000   2???           00012 goto inicio
+0000   2???           00013 goto inicio
 Warning[205]: Found directive in column 1. (ORG)
-                      00013 ORG 0x0004
-Warning[203]: Found opcode in column 1. (goto)
-0004   2???           00014 goto isr
-                      00015 
+                      00014 ORG 0x0004
+Warning[203]: Found opcode in column 1. (call)
+0004   2???           00015 call isr
+                      00016 
 Warning[205]: Found directive in column 1. (ORG)
-                      00016 ORG 0x0005
-0005                  00017 inicio
-0005   2???           00018         call init
-0006   2???           00019         call main
-                      00020 
+                      00017 ORG 0x0005
+0005                  00018 inicio
+0005   2???           00019         call init
+0006   2???           00020         call main
                       00021 
-                      00022 ;PROGRAMA PRINCIPAL
-0007                  00023 main
-                      00024 
-                      00025         ;Pagina 00 (BANK 0)
-0007   1283           00026         bcf     STATUS,RP0
-0008   1303           00027         bcf     STATUS,RP1
-                      00028                 
-                      00029         ;Esperando el Tiempo de Adquisicion para iniciar la conversion
-                      00030         ;20us delay loop with 4MHz oscillator frequency
-0009   3006           00031         movlw 0x06
-000A   00A3           00032         movwf contTA ;initialize count
-Warning[207]: Found label after column 1. (loop)
-000B                  00033         loop
-000B   0BA3           00034                 decfsz contTA,F ;dec count, store in count
-000C   2???           00035         goto loop ;not finished
-                      00036 
-                      00037         ;Empezando la conversion
-000D   151F           00038         bsf     ADCON0,GO ;GO/DONE: A/D Conversion Status bit, 1 = A/D conversion in progress
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  2
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-                      00039                                   ;(Setting this bit starts the A/D conversion. This bit is automaticall
-                            y cleared
-                      00040                                   ;by hardware when the A/D conversion is complete), 0 = A/D conversion 
-                            not in progress
-                      00041 
-                      00042         ;Esperando a que el ADC termine la conversion del valor analogico preveniente del potenciometro
-Warning[207]: Found label after column 1. (WaitingConvertion)
-000E                  00043         WaitingConvertion
-000E   0064           00044                 CLRWDT
-000F   191F           00045                 btfsc ADCON0,GO ;conversion done?
-0010   2???           00046         goto WaitingConvertion ;not finished
-                      00047 
-                      00048         ;Once the analog-to-digital conversion has completed, the result can be read. The
-                      00049         ;result of the conversion is automatically placed in the ADRES register upon
-                      00050         ;completion.
-0011   081E           00051         movf ADRESH,w
-                      00052         ;movwf BIN ; Guardo el resultado de la conversion en BIN (para su posterior procesamiento)
-0012   2???           00053         call    transmitir
-                      00054         ;call convert_dato
-                      00055         ;call env_dato
-0013   2???           00056         call delay
-                      00057 
+                      00022 
+                      00023 ;PROGRAMA PRINCIPAL
+0007                  00024 main
+0007   0000           00025         NOP
+0008   0064           00026         CLRWDT ; por las dudas :D
+                      00027         
+                      00028         ;BANKSEL PIR1
+                      00029         ;WaitRX
+                      00030         ;       btfss PIR1,RCIF
+                      00031         ;goto WaitRX
+                      00032 
+                      00033 
+                      00034 ;Fin main
 Warning[203]: Found opcode in column 1. (goto)
-0014   2???           00058 goto main
-                      00059 
-                      00060 
-0015                  00061 convert_dato
-0015   01A5           00062         clrf    BCDH
-0016   01A6           00063         clrf    BCDM
-0017   01A7           00064         clrf    BCDL
+0009   2???           00035 goto main
+                      00036 
+000A                  00037 TABLA
+000A   0782           00038                 addwf   PCL, 1
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000B   343F           00039                 retlw   d'63'  ;0
+000C   3406           00040                 retlw   d'6'   ;1
+000D   345B           00041                 retlw   d'91'  ;2
+000E   344F           00042                 retlw   d'79'  ;3
+000F   3466           00043                 retlw   d'102' ;4
+0010   346D           00044                 retlw   d'109' ;5
+0011   347D           00045                 retlw   d'125' ;6
+0012   3407           00046                 retlw   d'7'   ;7
+0013   347F           00047                 retlw   d'127' ;8
+0014   3467           00048                 retlw   d'103' ;9
+                      00049 
+0015                  00050 convert_dato
+0015   01A5           00051         clrf    BCDH
+0016   01A6           00052         clrf    BCDM
+0017   01A7           00053         clrf    BCDL
 Warning[207]: Found label after column 1. (BCD_HIGH)
-0018                  00065         BCD_HIGH
-0018   3064           00066         movlw   d'100'
-0019   02A4           00067         subwf   BIN,f
-001A   1C03           00068         btfss   STATUS,C        ; si esta seteado no hubo BORROW
-001B   2???           00069         goto    SUMA_100        ; si hubo BORROW entonces el numero que quedaba era menor a 100
-001C   0AA5           00070         incf    BCDH,f
-001D   2???           00071         goto BCD_HIGH
+0018                  00054         BCD_HIGH
+0018   3064           00055         movlw   d'100'
+0019   02A4           00056         subwf   BIN,f
+001A   1C03           00057         btfss   STATUS,C        ; si esta seteado no hubo BORROW
+001B   2???           00058         goto    SUMA_100        ; si hubo BORROW entonces el numero que quedaba era menor a 100
+001C   0AA5           00059         incf    BCDH,f
+001D   2???           00060         goto BCD_HIGH
 Warning[207]: Found label after column 1. (SUMA_100)
-001E                  00072         SUMA_100
-001E   3064           00073         movlw   d'100'
-001F   07A4           00074         addwf   BIN,f
-0020   2???           00075                 goto    BCD_LOW 
-                      00076 
+001E                  00061         SUMA_100
+001E   3064           00062         movlw   d'100'
+001F   07A4           00063         addwf   BIN,f
+0020   2???           00064                 goto    BCD_LOW 
+                      00065 
 Warning[207]: Found label after column 1. (BCD_LOW)
-0021                  00077         BCD_LOW 
-0021   300A           00078                 movlw   d'10'
-0022   02A4           00079         subwf   BIN,f
-0023   1C03           00080         btfss   STATUS,C   ; si esta seteado no hubo BORROW
-0024   2???           00081         goto    SUMA_10
+0021                  00066         BCD_LOW 
+0021   300A           00067                 movlw   d'10'
+0022   02A4           00068         subwf   BIN,f
+0023   1C03           00069         btfss   STATUS,C   ; si esta seteado no hubo BORROW
+0024   2???           00070         goto    SUMA_10
 Message[305]: Using default destination of 1 (file).
-0025   0AA6           00082         incf    BCDM
-0026   2???           00083         goto    BCD_LOW
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  3
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
+0025   0AA6           00071         incf    BCDM
+0026   2???           00072         goto    BCD_LOW
 Warning[207]: Found label after column 1. (SUMA_10)
-0027                  00084         SUMA_10 
-0027   300A           00085                 movlw   d'10'
-0028   07A4           00086         addwf   BIN,f
-0029   0824           00087         movf    BIN,w
-002A   00A7           00088         movwf   BCDL
-                      00089 ;FIN convert_dato
+0027                  00073         SUMA_10 
+0027   300A           00074                 movlw   d'10'
+0028   07A4           00075         addwf   BIN,f
+0029   0824           00076         movf    BIN,w
+002A   00A7           00077         movwf   BCDL
+                      00078 ;FIN convert_dato
 Warning[203]: Found opcode in column 1. (return)
-002B   0008           00090 return
-                      00091 
-002C                  00092 env_dato
-002C   3008           00093                 movlw   d'8'
-002D   2???           00094                 call    transmitir
-002E   2???           00095                 call    transmitir
-002F   2???           00096                 call    transmitir
-0030   2???           00097                 call    transmitir
-0031   3025           00098                 movlw   BCDH
-0032   0084           00099                 movwf   FSR
-Warning[207]: Found label after column 1. (continuar)
-0033                  00100         continuar 
-0033   0800           00101                 movf    INDF,w
-0034   3E30           00102                 addlw   0x30
-0035   2???           00103                 call    transmitir
-0036   0A84           00104                 incf    FSR,f
-0037   1D84           00105                 btfss   FSR,3
-0038   2???           00106                 goto    continuar       
-Warning[203]: Found opcode in column 1. (return)
-0039   0008           00107 return
-                      00108 
-003A                  00109 transmitir
-003A   0099           00110                 movwf TXREG
-Warning[207]: Found label after column 1. (esp_envio)
-003B                  00111         esp_envio
-003B   0064           00112                 CLRWDT
-003C   1E0C           00113                 btfss PIR1, TXIF
-003D   2???           00114         goto esp_envio
-003E   120C           00115                 bcf     PIR1, TXIF
-Warning[203]: Found opcode in column 1. (return)
-003F   0008           00116 return
-                      00117                 
-                      00118                 
-                      00119                 
-0040                  00120 delay
-0040   01A8           00121         clrf reg1
-0041   01A9           00122         clrf reg2
+002B   0008           00079 return
+                      00080 
+                      00081                 
+002C                  00082 delay
+002C   01A8           00083         clrf reg1
+002D   01A9           00084         clrf reg2
 Warning[207]: Found label after column 1. (cont_delay)
-0042                  00123         cont_delay      
-Message[305]: Using default destination of 1 (file).
-0042   0FA8           00124                 incfsz reg1
-0043   2???           00125                 goto cont_delay
-Message[305]: Using default destination of 1 (file).
-0044   0FA9           00126                 incfsz reg2
-0045   2???           00127                 goto cont_delay
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  4
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+002E                  00085         cont_delay      
+Message[305]: Using default destination of 1 (file).
+002E   0FA8           00086                 incfsz reg1
+002F   2???           00087                 goto cont_delay
+Message[305]: Using default destination of 1 (file).
+0030   0FA9           00088                 incfsz reg2
+0031   2???           00089                 goto cont_delay
 Warning[203]: Found opcode in column 1. (return)
-0046   0008           00128 return   
-                      00129 
-0047                  00130 isr
-                      00131         ;Pagina 00 (BANK 0)
-0047   1283           00132         bcf STATUS,RP0
-0048   1303           00133         bcf STATUS,RP1
-                      00134 
-0049   138B           00135         bcf     INTCON,GIE
-004A   1A8C           00136         btfsc PIR1,RCIF
-004B   2???           00137         goto recibiAlgo ; si RCIF esta en 1
-004C   1A0C           00138         btfsc PIR1,TXIF
-004D   2???           00139         goto transmitiAlgo ; si TXIF esta en 1
-004E   2???           00140         goto fin_isr
+0032   0008           00090 return   
+                      00091 
+0033                  00092 isr
+                      00093         ;Pagina 00 (BANK 0)
+0033   1283           00094         bcf STATUS,RP0
+0034   1303           00095         bcf STATUS,RP1
+                      00096 
+0035   138B           00097         bcf     INTCON,GIE
+0036   1A8C           00098         btfsc PIR1,RCIF
+0037   2???           00099         goto recibiAlgo ; si RCIF esta en 1
+0038   1A0C           00100         btfsc PIR1,TXIF
+0039   2???           00101         goto transmitiAlgo ; si TXIF esta en 1
+003A   2???           00102         goto fin_isr
+                      00103 
+003B                  00104 recibiAlgo
+                      00105         
+003B   1283 1303      00106         BANKSEL RCREG
+003D   081A           00107         movf RCREG,W
+003E   1283 1303      00108         BANKSEL BIN
+0040   00A4           00109         movwf BIN
+0041   2???           00110         call convert_dato; genero BCDL, BCDM y BCDH
+0042   1008           00111         BCF PORTD,RD0
+0043   0827           00112         MOVFW BCDL 
+0044   2???           00113         call TABLA
+0045   0086           00114         MOVWF PORTB
+0046   1408           00115         BSF PORTD,RD0
+0047   2???           00116         call delay;delay
+0048   1088           00117         BCF PORTD,RD1
+0049   0826           00118         MOVFW BCDM 
+004A   2???           00119         call TABLA
+004B   0086           00120         MOVWF PORTB
+004C   1488           00121         BSF PORTD,RD1
+004D   2???           00122         call delay;delay
+004E   1108           00123         BCF PORTD,RD2
+004F   0825           00124         MOVFW BCDH 
+0050   2???           00125         call TABLA
+0051   0086           00126         MOVWF PORTB
+0052   1508           00127         BSF PORTD,RD2
+0053   2???           00128         call delay;delay
+0054   1188           00129         BCF PORTD,RD3
+0055   3000           00130         MOVLW 0x00 
+0056   2???           00131         call TABLA
+0057   0086           00132         MOVWF PORTB
+0058   1588           00133         BSF PORTD,RD3
+0059   2???           00134         call delay;delay
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005A   128C           00135         bcf PIR1,RCIF
+005B   2???           00136         goto fin_isr
+                      00137 
+005C                  00138 transmitiAlgo
+005C   120C           00139         bcf PIR1,TXIF
+005D   2???           00140         goto fin_isr
                       00141 
-004F                  00142 recibiAlgo
-004F   128C           00143         bcf PIR1,RCIF
-0050   2???           00144         goto fin_isr
-                      00145 
-0051                  00146 transmitiAlgo
-0051   120C           00147         bcf PIR1,TXIF
-0052   2???           00148         goto fin_isr
+005E                  00142 fin_isr
+005E   178B           00143         bsf             INTCON,GIE      
+005F   0009           00144         retfie          
+                      00145         
+                      00146 
+                      00147 
+0060                  00148 init
                       00149 
-0053                  00150 fin_isr
-0053   178B           00151         bsf             INTCON,GIE      
-0054   0009           00152         retfie          
-                      00153 
-                      00154 
-                      00155 ;Comienzo de rutina de inicializacion
-0055                  00156 init
-                      00157 
-                      00158 ;INICIALIZACION PUERTO SERIE (USART)
-                      00159 
-                      00160         ;Pagina 01 (BANK 1)
-0055   1683           00161         bsf     STATUS,RP0
-0056   1303           00162         bcf     STATUS,RP1
-                      00163         ;TX y RX
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0057   1307           00164         bcf     TRISC,6 ;TX como salida  (OUTPUT)
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0058   1787           00165         bsf     TRISC,7 ;RX como entrada (INPUT)
-                      00166         ;The rate at which data is transmitted or received must be always be set using the
-                      00167         ;baud rate generator unless the USART is being used in synchronous slave mode.
-                      00168         ;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
-0059   3019           00169         movlw   d'25'
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005A   0099           00170         movwf   SPBRG   ; 9600 baudios en high speed con 4MHz
-                      00171         ;Configuro el TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005B   0198           00172     clrf TXSTA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005C   1498           00173         bsf TXSTA,TRMT  ;TRMT: Transmit Shift Register Status bit, 1 = TSR empty
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  5
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-005D   1518           00174         bsf TXSTA,BRGH  ;High speed
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005E   1698           00175         bsf TXSTA,TXEN  ;Transmision habilitada
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005F   1798           00176         bsf TXSTA,CSRC  ;El manual dice que no importa (en modo asincronico) pero jose lo puso en 1 no s
-                            e porque
-                      00177         
-                      00178         ;Pagina 00 (BANK 0)
-0060   1283           00179         bcf     STATUS,RP0
-0061   1303           00180         bcf     STATUS,RP1
-                      00181         ;Configuro el RCSTA
-0062   0198           00182         clrf RCSTA
-0063   1798           00183         bsf RCSTA,SPEN ; Serial Port Enable
-0064   1618           00184         bsf RCSTA,CREN ; Continuous receive enable
-                      00185 
-                      00186 ;FIN INICIALIZACION PUERTO SERIE (USART)
-                      00187 
-                      00188 
-                      00189 ;INICIALIZACION DE ADC
-                      00190 
-                      00191         ;Pagina 01 (BANK 1)
-0065   1683           00192         bsf     STATUS,RP0
-0066   1303           00193         bcf     STATUS,RP1
-                      00194         ;TRISA d'11111111' --> INPUT
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0067   0185           00195         clrf    TRISA
+                      00150 ;INICIALIZACION PUERTO DISPLAY
+                      00151         ;Pagina 00 (BANK 0)
+0060   1283           00152         bcf     STATUS,RP0
+0061   1303           00153         bcf     STATUS,RP1
+0062   0186           00154         CLRF PORTB ; PORTB Numero que voy a mostrar en el Display
+                      00155         ; PORTC Muestra el Display si su bit correspondiente esta en 0,
+                      00156         ; ej: RD0 = 0 --> Display0 muestra un numero
+0063   0188           00157         CLRF PORTD
 Message[305]: Using default destination of 1 (file).
+0064   0988           00158         COMF PORTD
+                      00159         ;Pagina 01 (BANK 1)
+0065   1683           00160         bsf     STATUS,RP0
+0066   1303           00161         bcf     STATUS,RP1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0068   0985           00196         comf    TRISA
-                      00197         ;All pins used for analog-to-digital conversion should also be configured as analog
-                      00198         ;pins. The value in the ADCON1 register determines if pins are configured as
-                      00199         ;analog or digital, and the source of the analog-to-digital converter voltage
-                      00200         ;references.
-                      00201         ;Configuro todos como entradas analogicas (A,A,A,A,A,A,A,A)
-0069   3000           00202         movlw   0x00
+0067   0186           00162         clrf TRISB
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-006A   009F           00203         movwf   ADCON1
-                      00204 
-                      00205         ;The input channel and the analog-to-digital converter clock are selected, and the
-                      00206         ;converter is enabled, by the options selected in the ADCON0 register. 
-                      00207         ;Pagina 00 (BANK 0)
-006B   1283           00208         bcf     STATUS,RP0
-006C   1303           00209         bcf     STATUS,RP1
-                      00210         ;Configuro el ADCON0 en b'01000001'
-                      00211         ;bit 7:6 ADCS1:ADCS0: A/D Conversion Clock Select bits: 00 = FOSC/2, 01 = FOSC/8, 10 = FOSC/32, 
-                            11 = FRC (clock derived from the internal A/D RC oscillator)
-                      00212         ;The analog-to-digital converter clock is selected as the main
-                      00213         ;oscillator frequency divided by eight, the input channel selected is channel zero, and
-                      00214         ;the converter is being enabled. 
-006D   3041           00215         movlw b'01000001'
-006E   009F           00216         movwf ADCON0
-                      00217 
-                      00218 ;FIN INICIALIZACION ADC
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  6
+0068   0188           00163         clrf TRISD      
+                      00164                 
+                      00165 ;FIN INICIALIZACION PUERTO DISPLAY 
+                      00166 
+                      00167 ;INICIALIZACION PUERTO SERIE (USART)
+                      00168 
+                      00169         ;Pagina 01 (BANK 1)
+0069   1683           00170         bsf     STATUS,RP0
+006A   1303           00171         bcf     STATUS,RP1
+                      00172         ;TX y RX
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006B   1307           00173         bcf     TRISC,6 ;TX como salida  (OUTPUT)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006C   1787           00174         bsf     TRISC,7 ;RX como entrada (INPUT)
+                      00175         ;The rate at which data is transmitted or received must be always be set using the
+                      00176         ;baud rate generator unless the USART is being used in synchronous slave mode.
+                      00177         ;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
+006D   3019           00178         movlw   d'25'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006E   0099           00179         movwf   SPBRG   ; 9600 baudios en high speed con 4MHz
+                      00180         ;Configuro el TXSTA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00219 
-                      00220 ; INICIALIZACION DE INTERRUPCIONES
-                      00221 
-                      00222         ;Pagina 01 (BANK 1)
-006F   1683           00223         bsf     STATUS,RP0
-0070   1303           00224         bcf     STATUS,RP1
-                      00225         ;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al re
+006F   0198           00181     clrf TXSTA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0070   1498           00182         bsf TXSTA,TRMT  ;TRMT: Transmit Shift Register Status bit, 1 = TSR empty
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0071   1518           00183         bsf TXSTA,BRGH  ;High speed
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0072   1698           00184         bsf TXSTA,TXEN  ;Transmision habilitada
+                      00185         
+                      00186         ;Pagina 00 (BANK 0)
+0073   1283           00187         bcf     STATUS,RP0
+0074   1303           00188         bcf     STATUS,RP1
+                      00189         ;Configuro el RCSTA
+0075   0198           00190         clrf RCSTA
+0076   1798           00191         bsf RCSTA,SPEN ; Serial Port Enable
+0077   1618           00192         bsf RCSTA,CREN ; Continuous receive enable
+                      00193 
+                      00194 ;FIN INICIALIZACION PUERTO SERIE (USART)
+                      00195 
+                      00196 
+                      00197 ; INICIALIZACION DE INTERRUPCIONES
+                      00198 
+                      00199         ;Pagina 01 (BANK 1)
+0078   1683           00200         bsf     STATUS,RP0
+0079   1303           00201         bcf     STATUS,RP1
+                      00202         ;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al re
                             cibir un dato. 
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0071   168C           00226         bsf     PIE1,RCIE       ;Habilito int de recepcion
-                      00227         ;bsf PIE1,TXIE  ;Habilito int de transmision (preguntar)
-                      00228  
-                      00229         ;Pagina 00 (BANK 0)
-0072   1283           00230         bcf     STATUS,RP0
-0073   1303           00231         bcf     STATUS,RP1
-0074   170B           00232         bsf     INTCON, PEIE    ; habilito int de perifericos
-0075   178B           00233         bsf     INTCON, GIE             ; habilito int global   
-                      00234 
-                      00235 ; FIN INICIALIZACION DE INTERRUPCIONES
-                      00236 ;FIN INIT
+007A   168C           00203         bsf     PIE1,RCIE       ;Habilito int de recepcion
+                      00204         ;bsf PIE1,TXIE  ;Habilito int de transmision (preguntar)
+                      00205  
+                      00206         ;Pagina 00 (BANK 0)
+007B   1283           00207         bcf     STATUS,RP0
+007C   1303           00208         bcf     STATUS,RP1
+007D   170B           00209         bsf     INTCON, PEIE    ; habilito int de perifericos
+007E   178B           00210         bsf     INTCON, GIE             ; habilito int global   
+                      00211 
+                      00212 ; FIN INICIALIZACION DE INTERRUPCIONES
+                      00213 
+                      00214 ;FIN INIT
 Warning[203]: Found opcode in column 1. (return)
-0076   0008           00237 return
+007F   0008           00215 return
 Warning[205]: Found directive in column 1. (end)
-                      00238 end
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  7
+                      00216 end
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  6
 
 
 SYMBOL TABLE
@@ -382,7 +342,7 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CKE                               00000006
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  8
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  7
 
 
 SYMBOL TABLE
@@ -441,7 +401,7 @@ NOT_W                             00000002
 NOT_WRITE                         00000002
 OBF                               00000006
 OERR                              00000001
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE  9
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  8
 
 
 SYMBOL TABLE
@@ -500,7 +460,7 @@ RC4                               00000004
 RC5                               00000005
 RC6                               00000006
 RC7                               00000007
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE 10
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE  9
 
 
 SYMBOL TABLE
@@ -559,7 +519,7 @@ SUMA_100                          0000001E
 SYNC                              00000004
 T0CS                              00000005
 T0IE                              00000005
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE 11
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE 10
 
 
 SYMBOL TABLE
@@ -576,6 +536,7 @@ T1SYNC                            00000002
 T2CKPS0                           00000000
 T2CKPS1                           00000001
 T2CON                             00000012
+TABLA                             0000000A
 TMR0                              00000001
 TMR0IE                            00000005
 TMR0IF                            00000002
@@ -617,13 +578,13 @@ TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
 TRISC6                            00000006
-TRISC7                            00000007
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE 12
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISC7                            00000007
 TRISD                             00000088
 TRISD0                            00000000
 TRISD1                            00000001
@@ -653,7 +614,6 @@ WCOL                              00000007
 WR                                00000001
 WREN                              00000002
 WRERR                             00000003
-WaitingConvertion                 0000000E
 Z                                 00000002
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
@@ -677,7 +637,7 @@ _LVP_OFF                          00003F7F
 _LVP_ON                           00003FFF
 _PWRTE_OFF                        00003FFF
 _PWRTE_ON                         00003FF7
-MPASM  5.40                    TRANSMISOR.ASM   8-31-2016  5:33:19         PAGE 13
+MPASM  5.40                      RECEPTOR.ASM   8-31-2016  5:34:12         PAGE 12
 
 
 SYMBOL TABLE
@@ -692,26 +652,21 @@ _XT_OSC                           00003FFD
 __16F877                          00000001
 __DEBUG                           1
 contTA                            00000023
-cont_delay                        00000042
-continuar                         00000033
+cont_delay                        0000002E
 convert_dato                      00000015
-delay                             00000040
-env_dato                          0000002C
-esp_envio                         0000003B
-fin_isr                           00000053
+delay                             0000002C
+fin_isr                           0000005E
 inicio                            00000005
-init                              00000055
-isr                               00000047
-loop                              0000000B
+init                              00000060
+isr                               00000033
 main                              00000007
-recibiAlgo                        0000004F
+recibiAlgo                        0000003B
 reg1                              00000028
 reg2                              00000029
-transmitiAlgo                     00000051
-transmitir                        0000003A
+transmitiAlgo                     0000005C
 
 Errors   :     0
-Warnings :    21 reported,     0 suppressed
-Messages :    16 reported,     0 suppressed
+Warnings :    15 reported,     0 suppressed
+Messages :    14 reported,     0 suppressed
 
 

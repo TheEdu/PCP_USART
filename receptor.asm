@@ -12,7 +12,7 @@ reg2	EQU	0X29
 ORG 0X0000
 goto inicio
 ORG 0x0004
-goto isr
+call isr
 
 ORG 0x0005
 inicio
@@ -22,12 +22,30 @@ inicio
 
 ;PROGRAMA PRINCIPAL
 main
+	NOP
+	CLRWDT ; por las dudas :D
 	
-	call convert_dato
- 	call delay
+	;BANKSEL PIR1
+	;WaitRX
+	;	btfss PIR1,RCIF
+	;goto WaitRX
+
 
 ;Fin main
 goto main
+
+TABLA
+		addwf	PCL, 1
+		retlw	d'63'  ;0
+		retlw	d'6'   ;1
+		retlw	d'91'  ;2
+		retlw	d'79'  ;3
+		retlw	d'102' ;4
+		retlw	d'109' ;5
+		retlw	d'125' ;6
+		retlw	d'7'   ;7
+		retlw	d'127' ;8
+		retlw	d'103' ;9
 
 convert_dato
         clrf    BCDH
@@ -61,7 +79,6 @@ convert_dato
 return
 
  		
- 		
 delay
 	clrf reg1
 	clrf reg2
@@ -73,19 +90,79 @@ delay
 return	 
 
 isr
- 	bcf		INTCON,GIE
- 	btfss	PIR1,RCIF	; si fue una interrupcion de recepcion  saltamos la sig instruccion
- 	goto	fin_isr
- 	bcf		PIR1,RCIF	; si se recibio un dato limpio la bandera de la int
-	goto    fin_isr
+	;Pagina 00 (BANK 0)
+	bcf STATUS,RP0
+	bcf STATUS,RP1
+
+	bcf	INTCON,GIE
+	btfsc PIR1,RCIF
+	goto recibiAlgo ; si RCIF esta en 1
+	btfsc PIR1,TXIF
+	goto transmitiAlgo ; si TXIF esta en 1
+	goto fin_isr
+
+recibiAlgo
+	
+	BANKSEL RCREG
+	movf RCREG,W
+	BANKSEL BIN
+	movwf BIN
+	call convert_dato; genero BCDL, BCDM y BCDH
+	BCF PORTD,RD0
+	MOVFW BCDL 
+	call TABLA
+	MOVWF PORTB
+	BSF PORTD,RD0
+	call delay;delay
+	BCF PORTD,RD1
+	MOVFW BCDM 
+	call TABLA
+	MOVWF PORTB
+	BSF PORTD,RD1
+	call delay;delay
+	BCF PORTD,RD2
+	MOVFW BCDH 
+	call TABLA
+	MOVWF PORTB
+	BSF PORTD,RD2
+	call delay;delay
+	BCF PORTD,RD3
+	MOVLW 0x00 
+	call TABLA
+	MOVWF PORTB
+	BSF PORTD,RD3
+ 	call delay;delay
+	bcf PIR1,RCIF
+	goto fin_isr
+
+transmitiAlgo
+	bcf PIR1,TXIF
+	goto fin_isr
 
 fin_isr
  	bsf		INTCON,GIE 	
- 	retfie	
-
+ 	retfie		
+	
 
 
 init
+
+;INICIALIZACION PUERTO DISPLAY
+	;Pagina 00 (BANK 0)
+ 	bcf	STATUS,RP0
+ 	bcf	STATUS,RP1
+	CLRF PORTB ; PORTB Numero que voy a mostrar en el Display
+	; PORTC Muestra el Display si su bit correspondiente esta en 0,
+ 	; ej: RD0 = 0 --> Display0 muestra un numero
+	CLRF PORTD
+	COMF PORTD
+	;Pagina 01 (BANK 1)
+ 	bsf	STATUS,RP0
+ 	bcf	STATUS,RP1
+	clrf TRISB
+	clrf TRISD	
+		
+;FIN INICIALIZACION PUERTO DISPLAY 
 
 ;INICIALIZACION PUERTO SERIE (USART)
 
@@ -123,13 +200,14 @@ init
  	bsf	STATUS,RP0
  	bcf	STATUS,RP1
 	;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al recibir un dato. 
- 	bsf		PIE1, RCIE 	;Habilito int de recepcion
+ 	bsf	PIE1,RCIE 	;Habilito int de recepcion
+	;bsf PIE1,TXIE	;Habilito int de transmision (preguntar)
  
 	;Pagina 00 (BANK 0)
  	bcf	STATUS,RP0
  	bcf	STATUS,RP1
- 	bsf		INTCON, PEIE	; habilito int de perifericos
- 	bsf		INTCON, GIE		; habilito int global	
+ 	bsf	INTCON, PEIE	; habilito int de perifericos
+ 	bsf	INTCON, GIE		; habilito int global	
 
 ; FIN INICIALIZACION DE INTERRUPCIONES
 

@@ -1,6 +1,5 @@
-;edu tp pcp-usart (KAIZEN)
+;edu tp pcp-usart transmisor (KAIZEN)
 #include <P16F877.INC>
-
 contTA  EQU 0X23 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
 BIN 	EQU 0X24 ; resultado de la conversion del ADC (convertion result)
 BCDH	EQU	0x25
@@ -42,6 +41,7 @@ main
 
 	;Esperando a que el ADC termine la conversion del valor analogico preveniente del potenciometro
 	WaitingConvertion
+		CLRWDT
 		btfsc ADCON0,GO ;conversion done?
 	goto WaitingConvertion ;not finished
 
@@ -49,13 +49,14 @@ main
 	;result of the conversion is automatically placed in the ADRES register upon
 	;completion.
 	movf ADRESH,w
-	movwf BIN ; Guardo el resultado de la conversion en BIN (para su posterior procesamiento)
-	
-	call convert_dato
- 	call env_dato
- 	call delay
+	;movwf BIN ; Guardo el resultado de la conversion en BIN (para su posterior procesamiento)
+	call	transmitir
+	;call convert_dato
+ 	;call env_dato
+	call delay
 
 goto main
+
 
 convert_dato
         clrf    BCDH
@@ -108,10 +109,12 @@ return
 transmitir
 		movwf TXREG
 	esp_envio
+		CLRWDT
  		btfss PIR1, TXIF
  	goto esp_envio
  		bcf	PIR1, TXIF
 return
+ 		
  		
  		
 delay
@@ -125,18 +128,31 @@ delay
 return	 
 
 isr
- 	bcf		INTCON,GIE
- 	btfss	PIR1,RCIF	; si fue una interrupcion de recepcion  saltamos la sig instruccion
- 	goto	fin_isr
- 	bcf		PIR1,RCIF	; si se recibio un dato limpio la bandera de la int
-	goto    fin_isr
+	;Pagina 00 (BANK 0)
+	bcf STATUS,RP0
+	bcf STATUS,RP1
+
+	bcf	INTCON,GIE
+	btfsc PIR1,RCIF
+	goto recibiAlgo ; si RCIF esta en 1
+	btfsc PIR1,TXIF
+	goto transmitiAlgo ; si TXIF esta en 1
+	goto fin_isr
+
+recibiAlgo
+	bcf PIR1,RCIF
+	goto fin_isr
+
+transmitiAlgo
+	bcf PIR1,TXIF
+	goto fin_isr
 
 fin_isr
  	bsf		INTCON,GIE 	
- 	retfie	
+ 	retfie		
 
 
-
+;Comienzo de rutina de inicializacion
 init
 
 ;INICIALIZACION PUERTO SERIE (USART)
@@ -207,13 +223,14 @@ init
  	bsf	STATUS,RP0
  	bcf	STATUS,RP1
 	;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al recibir un dato. 
- 	bsf		PIE1, RCIE 	;Habilito int de recepcion
+ 	bsf	PIE1,RCIE 	;Habilito int de recepcion
+	;bsf PIE1,TXIE	;Habilito int de transmision (preguntar)
  
 	;Pagina 00 (BANK 0)
  	bcf	STATUS,RP0
  	bcf	STATUS,RP1
- 	bsf		INTCON, PEIE	; habilito int de perifericos
- 	bsf		INTCON, GIE		; habilito int global	
+ 	bsf	INTCON, PEIE	; habilito int de perifericos
+ 	bsf	INTCON, GIE		; habilito int global	
 
 ; FIN INICIALIZACION DE INTERRUPCIONES
 ;FIN INIT
