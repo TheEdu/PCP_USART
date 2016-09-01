@@ -1,15 +1,11 @@
 ;edu tp pcp-usart (KAIZEN)
 #include <P16F877.INC>
 
-dato 	EQU	0x22
 BIN		EQU	0x24
 BCDH	EQU	0x25
 BCDM	EQU	0x26
 BCDL	EQU	0x27
-ENTER	EQU 0x28
-reg1	EQU	0x29
-reg2	EQU	0X30
-reg3	EQU 0x31
+
 
 ORG 0X0000
 goto inicio

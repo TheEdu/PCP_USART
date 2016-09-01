@@ -1,4 +1,4 @@
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  1
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -16,311 +16,307 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 
                       00528         LIST
                       00003 
-  00000022            00004 dato    EQU     0x22
-  00000024            00005 BIN             EQU     0x24
-  00000025            00006 BCDH    EQU     0x25
-  00000026            00007 BCDM    EQU     0x26
-  00000027            00008 BCDL    EQU     0x27
-  00000028            00009 ENTER   EQU 0x28
-  00000029            00010 reg1    EQU     0x29
-  00000030            00011 reg2    EQU     0X30
-  00000031            00012 reg3    EQU 0x31
-                      00013 
+  00000024            00004 BIN             EQU     0x24
+  00000025            00005 BCDH    EQU     0x25
+  00000026            00006 BCDM    EQU     0x26
+  00000027            00007 BCDL    EQU     0x27
+                      00008 
+                      00009 
 Warning[205]: Found directive in column 1. (ORG)
-                      00014 ORG 0X0000
+                      00010 ORG 0X0000
 Warning[203]: Found opcode in column 1. (goto)
-0000   2???           00015 goto inicio
+0000   2???           00011 goto inicio
 Warning[205]: Found directive in column 1. (ORG)
-                      00016 ORG 0x0004
+                      00012 ORG 0x0004
 Warning[203]: Found opcode in column 1. (goto)
-0004   2???           00017 goto isr
-                      00018 
+0004   2???           00013 goto isr
+                      00014 
 Warning[205]: Found directive in column 1. (ORG)
-                      00019 ORG 0x0005
-0005                  00020 inicio
-0005   2???           00021         call init
-                      00022 ;PROGRAMA PRINCIPAL
-0006                  00023 main
-0006   0000           00024         NOP
-0007   0064           00025         CLRWDT ; por las dudas :D
-                      00026 ;Fin main
+                      00015 ORG 0x0005
+0005                  00016 inicio
+0005   2???           00017         call init
+                      00018 ;PROGRAMA PRINCIPAL
+0006                  00019 main
+0006   0000           00020         NOP
+0007   0064           00021         CLRWDT ; por las dudas :D
+                      00022 ;Fin main
 Warning[203]: Found opcode in column 1. (goto)
-0008   2???           00027 goto main
-                      00028 
-                      00029 
-0009                  00030 convert_dato
-0009   01A5           00031         clrf    BCDH
-000A   01A6           00032         clrf    BCDM
-000B   01A7           00033         clrf    BCDL
+0008   2???           00023 goto main
+                      00024 
+                      00025 
+0009                  00026 convert_dato
+0009   01A5           00027         clrf    BCDH
+000A   01A6           00028         clrf    BCDM
+000B   01A7           00029         clrf    BCDL
 Warning[207]: Found label after column 1. (BCD_HIGH)
-000C                  00034         BCD_HIGH
-000C   3064           00035         movlw   d'100'
-000D   02A4           00036         subwf   BIN,f
-000E   1C03           00037         btfss   STATUS,C        ; si esta seteado no hubo BORROW
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  2
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-000F   2???           00038         goto    SUMA_100        ; si hubo BORROW entonces el numero que quedaba era menor a 100
-0010   0AA5           00039         incf    BCDH,f
-0011   2???           00040         goto BCD_HIGH
+000C                  00030         BCD_HIGH
+000C   3064           00031         movlw   d'100'
+000D   02A4           00032         subwf   BIN,f
+000E   1C03           00033         btfss   STATUS,C        ; si esta seteado no hubo BORROW
+000F   2???           00034         goto    SUMA_100        ; si hubo BORROW entonces el numero que quedaba era menor a 100
+0010   0AA5           00035         incf    BCDH,f
+0011   2???           00036         goto BCD_HIGH
 Warning[207]: Found label after column 1. (SUMA_100)
-0012                  00041         SUMA_100
-0012   3064           00042         movlw   d'100'
-0013   07A4           00043         addwf   BIN,f
-0014   2???           00044                 goto    BCD_LOW 
-                      00045 
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0012                  00037         SUMA_100
+0012   3064           00038         movlw   d'100'
+0013   07A4           00039         addwf   BIN,f
+0014   2???           00040                 goto    BCD_LOW 
+                      00041 
 Warning[207]: Found label after column 1. (BCD_LOW)
-0015                  00046         BCD_LOW 
-0015   300A           00047                 movlw   d'10'
-0016   02A4           00048         subwf   BIN,f
-0017   1C03           00049         btfss   STATUS,C   ; si esta seteado no hubo BORROW
-0018   2???           00050         goto    SUMA_10
+0015                  00042         BCD_LOW 
+0015   300A           00043                 movlw   d'10'
+0016   02A4           00044         subwf   BIN,f
+0017   1C03           00045         btfss   STATUS,C   ; si esta seteado no hubo BORROW
+0018   2???           00046         goto    SUMA_10
 Message[305]: Using default destination of 1 (file).
-0019   0AA6           00051         incf    BCDM
-001A   2???           00052         goto    BCD_LOW
+0019   0AA6           00047         incf    BCDM
+001A   2???           00048         goto    BCD_LOW
 Warning[207]: Found label after column 1. (SUMA_10)
-001B                  00053         SUMA_10 
-001B   300A           00054                 movlw   d'10'
-001C   07A4           00055         addwf   BIN,f
-001D   0824           00056         movf    BIN,w
-001E   00A7           00057         movwf   BCDL
-                      00058 ;FIN convert_dato
+001B                  00049         SUMA_10 
+001B   300A           00050                 movlw   d'10'
+001C   07A4           00051         addwf   BIN,f
+001D   0824           00052         movf    BIN,w
+001E   00A7           00053         movwf   BCDL
+                      00054 ;FIN convert_dato
 Warning[203]: Found opcode in column 1. (return)
-001F   0008           00059 return
-                      00060 
-                      00061                 
-                      00062 
-0020                  00063 isr
-0020   138B           00064         bcf     INTCON,GIE
-0021   190B           00065         BTFSC INTCON,T0IF ;SALTA SI NO ES LA INTERRUPCION DEL TIMER
-0022   2???           00066         GOTO INTERRUPCION_TIMER
-0023   1A8C           00067         btfsc PIR1,RCIF
-0024   2???           00068         goto recibiAlgo ; si RCIF esta en 1
-0025   2???           00069         goto fin_isr
-                      00070 
-0026                  00071 INTERRUPCION_TIMER
-                      00072         ;REESTABLECER TIMER (PARA QUE VUELVA A INTERRUMPIR DESPUES DE 2 MSEG)
-0026   110B           00073         BCF INTCON,T0IF ;PONGO EN 0 EL BIT T0IF (DEL TMR0)
-0027   3086           00074         MOVLW 0X86 ;LE PASO EL VALOR 134 (DECIMAL) AL TMR0 
-0028   0081           00075         MOVWF TMR0 ;PARA QUE EMPIECE A CONTAR EL TMR0 DESDE ESE VALOR.
-                      00076 
-0029   1403           00077         BSF STATUS,C
+001F   0008           00055 return
+                      00056 
+                      00057                 
+                      00058 
+0020                  00059 isr
+0020   138B           00060         bcf     INTCON,GIE
+0021   190B           00061         BTFSC INTCON,T0IF ;SALTA SI NO ES LA INTERRUPCION DEL TIMER
+0022   2???           00062         GOTO INTERRUPCION_TIMER
+0023   1A8C           00063         btfsc PIR1,RCIF
+0024   2???           00064         goto recibiAlgo ; si RCIF esta en 1
+0025   2???           00065         goto fin_isr
+                      00066 
+0026                  00067 INTERRUPCION_TIMER
+                      00068         ;REESTABLECER TIMER (PARA QUE VUELVA A INTERRUMPIR DESPUES DE 2 MSEG)
+0026   110B           00069         BCF INTCON,T0IF ;PONGO EN 0 EL BIT T0IF (DEL TMR0)
+0027   3086           00070         MOVLW 0X86 ;LE PASO EL VALOR 134 (DECIMAL) AL TMR0 
+0028   0081           00071         MOVWF TMR0 ;PARA QUE EMPIECE A CONTAR EL TMR0 DESDE ESE VALOR.
+                      00072 
+0029   1403           00073         BSF STATUS,C
 Message[305]: Using default destination of 1 (file).
-002A   0D88           00078         RLF PORTD
-002B   1988           00079         BTFSC PORTD, 3  ;SALTA UNA INSTRUCCION SI EL BIT 6 DE PORTC ES 0, OSEA QUE TIENE QUE VOLVER A PO
+002A   0D88           00074         RLF PORTD
+002B   1988           00075         BTFSC PORTD, 3  ;SALTA UNA INSTRUCCION SI EL BIT 6 DE PORTC ES 0, OSEA QUE TIENE QUE VOLVER A PO
                             NER EN 0 EL BIT 0 PARA MOSTRAR SEGUNODS_UNIDAD
-002C   2???           00080         GOTO DISPLAY1
-002D   30FE           00081         MOVLW b'11111110'
-002E   0088           00082         MOVWF PORTD 
-                      00083 
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  3
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
+002C   2???           00076         GOTO DISPLAY1
+002D   30FE           00077         MOVLW b'11111110'
+002E   0088           00078         MOVWF PORTD 
+                      00079 
 Warning[207]: Found label after column 1. (DISPLAY1)
-002F                  00084         DISPLAY1 ;REFRESCA EL VALOR DE DISPLAY1 (EL BCDL) (SI LO TIENE QUE HACER)
-002F   1808           00085                 BTFSC PORTD,0 ;SALTA SI TIENE QUE MOSTRAR BCDL
-0030   2???           00086                 GOTO DISPLAY2
-0031   0827           00087                 MOVF BCDL,W
-0032   2???           00088                 CALL TABLA
-0033   0086           00089                 MOVWF PORTB
-0034   2???           00090                 GOTO fin_isr
-                      00091 
+002F                  00080         DISPLAY1 ;REFRESCA EL VALOR DE DISPLAY1 (EL BCDL) (SI LO TIENE QUE HACER)
+002F   1808           00081                 BTFSC PORTD,0 ;SALTA SI TIENE QUE MOSTRAR BCDL
+0030   2???           00082                 GOTO DISPLAY2
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0031   0827           00083                 MOVF BCDL,W
+0032   2???           00084                 CALL TABLA
+0033   0086           00085                 MOVWF PORTB
+0034   2???           00086                 GOTO fin_isr
+                      00087 
 Warning[207]: Found label after column 1. (DISPLAY2)
-0035                  00092         DISPLAY2 ;REFRESCA EL VALOR DE DISPLAY2 (EL BCDM) (SI LO TIENE QUE HACER)
-0035   1888           00093                 BTFSC PORTD,1 ;SALTA SI TIENE QUE MOSTRAR BCDM
-0036   2???           00094                 GOTO DISPLAY3
-0037   0826           00095                 MOVF BCDM,W
-0038   2???           00096                 CALL TABLA
-0039   0086           00097                 MOVWF PORTB
-003A   2???           00098                 GOTO fin_isr
-                      00099 
+0035                  00088         DISPLAY2 ;REFRESCA EL VALOR DE DISPLAY2 (EL BCDM) (SI LO TIENE QUE HACER)
+0035   1888           00089                 BTFSC PORTD,1 ;SALTA SI TIENE QUE MOSTRAR BCDM
+0036   2???           00090                 GOTO DISPLAY3
+0037   0826           00091                 MOVF BCDM,W
+0038   2???           00092                 CALL TABLA
+0039   0086           00093                 MOVWF PORTB
+003A   2???           00094                 GOTO fin_isr
+                      00095 
 Warning[207]: Found label after column 1. (DISPLAY3)
-003B                  00100         DISPLAY3 ;REFRESCA EL VALOR DE DISPLAY3 (EL BCDH) (SI LO TIENE QUE HACER)
-003B   1908           00101                 BTFSC PORTD,2 ;SALTA SI TIENE QUE MOSTRAR BCDH
-003C   2???           00102                 GOTO fin_isr
-003D   0825           00103                 MOVF BCDH,W
-003E   2???           00104                 CALL TABLA
-003F   0086           00105                 MOVWF PORTB
-0040   2???           00106                 GOTO fin_isr
-                      00107 
-                      00108 
-0041                  00109 TABLA
-0041   0782           00110                 addwf   PCL, 1
-0042   343F           00111                 retlw   d'63'  ;0
-0043   3406           00112                 retlw   d'6'   ;1
-0044   345B           00113                 retlw   d'91'  ;2
-0045   344F           00114                 retlw   d'79'  ;3
-0046   3466           00115                 retlw   d'102' ;4
-0047   346D           00116                 retlw   d'109' ;5
-0048   347D           00117                 retlw   d'125' ;6
-0049   3407           00118                 retlw   d'7'   ;7
-004A   347F           00119                 retlw   d'127' ;8
-004B   3467           00120                 retlw   d'103' ;9
-                      00121         
-                      00122 
-004C                  00123 recibiAlgo
-004C   128C           00124         bcf PIR1,RCIF
-004D   081A           00125         movf RCREG,W
-004E   00A4           00126         movwf BIN
-004F   2???           00127         call convert_dato; genero BCDL, BCDM y BCDH
-0050   2???           00128         goto fin_isr
-                      00129 
-                      00130 
-0051                  00131 fin_isr
-0051   178B           00132         bsf             INTCON,GIE      
-0052   0009           00133         retfie          
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  4
+003B                  00096         DISPLAY3 ;REFRESCA EL VALOR DE DISPLAY3 (EL BCDH) (SI LO TIENE QUE HACER)
+003B   1908           00097                 BTFSC PORTD,2 ;SALTA SI TIENE QUE MOSTRAR BCDH
+003C   2???           00098                 GOTO fin_isr
+003D   0825           00099                 MOVF BCDH,W
+003E   2???           00100                 CALL TABLA
+003F   0086           00101                 MOVWF PORTB
+0040   2???           00102                 GOTO fin_isr
+                      00103 
+                      00104 
+0041                  00105 TABLA
+0041   0782           00106                 addwf   PCL, 1
+0042   343F           00107                 retlw   d'63'  ;0
+0043   3406           00108                 retlw   d'6'   ;1
+0044   345B           00109                 retlw   d'91'  ;2
+0045   344F           00110                 retlw   d'79'  ;3
+0046   3466           00111                 retlw   d'102' ;4
+0047   346D           00112                 retlw   d'109' ;5
+0048   347D           00113                 retlw   d'125' ;6
+0049   3407           00114                 retlw   d'7'   ;7
+004A   347F           00115                 retlw   d'127' ;8
+004B   3467           00116                 retlw   d'103' ;9
+                      00117         
+                      00118 
+004C                  00119 recibiAlgo
+004C   128C           00120         bcf PIR1,RCIF
+004D   081A           00121         movf RCREG,W
+004E   00A4           00122         movwf BIN
+004F   2???           00123         call convert_dato; genero BCDL, BCDM y BCDH
+0050   2???           00124         goto fin_isr
+                      00125 
+                      00126 
+0051                  00127 fin_isr
+0051   178B           00128         bsf             INTCON,GIE      
+0052   0009           00129         retfie          
+                      00130         
+                      00131 
+                      00132 
+0053                  00133 init
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00134         
-                      00135 
-                      00136 
-0053                  00137 init
-                      00138 
-                      00139 ;INICIALIZACION PUERTO DISPLAY
-                      00140         ;Pagina 00 (BANK 0)
-0053   1283           00141         bcf     STATUS,RP0
-0054   1303           00142         bcf     STATUS,RP1
-0055   0186           00143         CLRF PORTB ; PORTB Numero que voy a mostrar en el Display
-                      00144         ; PORTC Muestra el Display si su bit correspondiente esta en 0,
-                      00145         ; ej: RD0 = 0 --> Display0 muestra un numero
-0056   0188           00146         CLRF PORTD
+                      00134 
+                      00135 ;INICIALIZACION PUERTO DISPLAY
+                      00136         ;Pagina 00 (BANK 0)
+0053   1283           00137         bcf     STATUS,RP0
+0054   1303           00138         bcf     STATUS,RP1
+0055   0186           00139         CLRF PORTB ; PORTB Numero que voy a mostrar en el Display
+                      00140         ; PORTC Muestra el Display si su bit correspondiente esta en 0,
+                      00141         ; ej: RD0 = 0 --> Display0 muestra un numero
+0056   0188           00142         CLRF PORTD
 Message[305]: Using default destination of 1 (file).
-0057   0988           00147         COMF PORTD
-                      00148         ;Pagina 01 (BANK 1)
-0058   1683           00149         bsf     STATUS,RP0
-0059   1303           00150         bcf     STATUS,RP1
+0057   0988           00143         COMF PORTD
+                      00144         ;Pagina 01 (BANK 1)
+0058   1683           00145         bsf     STATUS,RP0
+0059   1303           00146         bcf     STATUS,RP1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005A   0186           00151         clrf TRISB
+005A   0186           00147         clrf TRISB
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005B   0188           00152         clrf TRISD      
-                      00153                 
-                      00154 ;FIN INICIALIZACION PUERTO DISPLAY 
-                      00155 
-                      00156 ;INICIALIZACION PUERTO SERIE (USART)
-                      00157 
-                      00158         ;Pagina 01 (BANK 1)
-005C   1683           00159         bsf     STATUS,RP0
-005D   1303           00160         bcf     STATUS,RP1
-                      00161         ;TX y RX
+005B   0188           00148         clrf TRISD      
+                      00149                 
+                      00150 ;FIN INICIALIZACION PUERTO DISPLAY 
+                      00151 
+                      00152 ;INICIALIZACION PUERTO SERIE (USART)
+                      00153 
+                      00154         ;Pagina 01 (BANK 1)
+005C   1683           00155         bsf     STATUS,RP0
+005D   1303           00156         bcf     STATUS,RP1
+                      00157         ;TX y RX
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005E   1307           00162         bcf     TRISC,6 ;TX como salida  (OUTPUT)
+005E   1307           00158         bcf     TRISC,6 ;TX como salida  (OUTPUT)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-005F   1787           00163         bsf     TRISC,7 ;RX como entrada (INPUT)
-                      00164         ;Configuro el TXSTA
+005F   1787           00159         bsf     TRISC,7 ;RX como entrada (INPUT)
+                      00160         ;Configuro el TXSTA
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0060   0198           00165     clrf TXSTA
+0060   0198           00161     clrf TXSTA
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0061   1498           00166         bsf TXSTA,TRMT  ;TRMT: Transmit Shift Register Status bit, 1 = TSR empty
+0061   1498           00162         bsf TXSTA,TRMT  ;TRMT: Transmit Shift Register Status bit, 1 = TSR empty
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0062   1518           00167         bsf TXSTA,BRGH  ;High speed
+0062   1518           00163         bsf TXSTA,BRGH  ;High speed
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0063   1698           00168         bsf TXSTA,TXEN  ;Transmision habilitada
-                      00169         ;The rate at which data is transmitted or received must be always be set using the
-                      00170         ;baud rate generator unless the USART is being used in synchronous slave mode.
-                      00171         ;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
-0064   3019           00172         movlw   d'25'
+0063   1698           00164         bsf TXSTA,TXEN  ;Transmision habilitada
+                      00165         ;The rate at which data is transmitted or received must be always be set using the
+                      00166         ;baud rate generator unless the USART is being used in synchronous slave mode.
+                      00167         ;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
+0064   3019           00168         movlw   d'25'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0065   0099           00173         movwf   SPBRG   ; 9600 baudios en high speed con 4MHz
-                      00174         
-                      00175         ;Pagina 00 (BANK 0)
-0066   1283           00176         bcf     STATUS,RP0
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  5
+0065   0099           00169         movwf   SPBRG   ; 9600 baudios en high speed con 4MHz
+                      00170         
+                      00171         ;Pagina 00 (BANK 0)
+0066   1283           00172         bcf     STATUS,RP0
+0067   1303           00173         bcf     STATUS,RP1
+                      00174         ;Configuro el RCSTA
+0068   0198           00175         clrf RCSTA
+0069   1798           00176         bsf RCSTA,SPEN ; Serial Port Enable
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0067   1303           00177         bcf     STATUS,RP1
-                      00178         ;Configuro el RCSTA
-0068   0198           00179         clrf RCSTA
-0069   1798           00180         bsf RCSTA,SPEN ; Serial Port Enable
-006A   1618           00181         bsf RCSTA,CREN ; Continuous receive enable
-                      00182 
-                      00183 ;FIN INICIALIZACION PUERTO SERIE (USART)
-                      00184 
-                      00185 
-                      00186 ; INICIALIZACION DE INTERRUPCIONES
-                      00187 
-                      00188         ;Pagina 01 (BANK 1)
-006B   1683           00189         bsf     STATUS,RP0
-006C   1303           00190         bcf     STATUS,RP1
-                      00191         ;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al re
+006A   1618           00177         bsf RCSTA,CREN ; Continuous receive enable
+                      00178 
+                      00179 ;FIN INICIALIZACION PUERTO SERIE (USART)
+                      00180 
+                      00181 
+                      00182 ; INICIALIZACION DE INTERRUPCIONES
+                      00183 
+                      00184         ;Pagina 01 (BANK 1)
+006B   1683           00185         bsf     STATUS,RP0
+006C   1303           00186         bcf     STATUS,RP1
+                      00187         ;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al re
                             cibir un dato. 
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-006D   168C           00192         bsf     PIE1,RCIE       ;Habilito int de recepcion
-                      00193  
-                      00194 
-                      00195         ;Pagina 00 (BANK 0)
-006E   1283           00196         bcf     STATUS,RP0
-006F   1303           00197         bcf     STATUS,RP1
-0070   168B           00198         bsf INTCON,T0IE ;HABILITA EL TMR0
-0071   170B           00199         bsf     INTCON, PEIE    ; habilito int de perifericos
-0072   178B           00200         bsf     INTCON, GIE             ; habilito int global   
-                      00201 
-                      00202 ; FIN INICIALIZACION DE INTERRUPCIONES
-                      00203 
-                      00204 ;CONFIGURACION TIMER
+006D   168C           00188         bsf     PIE1,RCIE       ;Habilito int de recepcion
+                      00189  
+                      00190 
+                      00191         ;Pagina 00 (BANK 0)
+006E   1283           00192         bcf     STATUS,RP0
+006F   1303           00193         bcf     STATUS,RP1
+0070   168B           00194         bsf INTCON,T0IE ;HABILITA EL TMR0
+0071   170B           00195         bsf     INTCON, PEIE    ; habilito int de perifericos
+0072   178B           00196         bsf     INTCON, GIE             ; habilito int global   
+                      00197 
+                      00198 ; FIN INICIALIZACION DE INTERRUPCIONES
+                      00199 
+                      00200 ;CONFIGURACION TIMER
 Warning[203]: Found opcode in column 1. (BSF)
-0073   1683           00205 BSF STATUS,RP0          ;BANCO 1 
+0073   1683           00201 BSF STATUS,RP0          ;BANCO 1 
 Warning[203]: Found opcode in column 1. (BCF)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0074   1281           00206 BCF OPTION_REG,T0CS ;USA EL OSCILADOR INTERNO (Fosc/4)
+0074   1281           00202 BCF OPTION_REG,T0CS ;USA EL OSCILADOR INTERNO (Fosc/4)
 Warning[203]: Found opcode in column 1. (BCF)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0075   1181           00207 BCF OPTION_REG,PSA      ;HABILITA EL PRESCALER
-                      00208 
-                      00209 ;VALOR DEL PRESCALER 001
+0075   1181           00203 BCF OPTION_REG,PSA      ;HABILITA EL PRESCALER
+                      00204 
+                      00205 ;VALOR DEL PRESCALER 001
 Warning[203]: Found opcode in column 1. (BCF)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0076   1101           00210 BCF OPTION_REG,PS2 ;BIT 2 DEL PRESCALER EN 0
+0076   1101           00206 BCF OPTION_REG,PS2 ;BIT 2 DEL PRESCALER EN 0
 Warning[203]: Found opcode in column 1. (BCF)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0077   1081           00211 BCF OPTION_REG,PS1 ;BIT 1 DEL PRESCALER EN 0
+0077   1081           00207 BCF OPTION_REG,PS1 ;BIT 1 DEL PRESCALER EN 0
 Warning[203]: Found opcode in column 1. (BSF)
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0078   1401           00212 BSF OPTION_REG,PS0 ;BIT 0 DEL PRESCALER EN 1
-                      00213 
-                      00214 
-                      00215         
-                      00216 ;INICIALIZACION DEL TMR0
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  6
+0078   1401           00208 BSF OPTION_REG,PS0 ;BIT 0 DEL PRESCALER EN 1
+                      00209 
+                      00210 
+                      00211         
+                      00212 ;INICIALIZACION DEL TMR0
+Warning[203]: Found opcode in column 1. (BCF)
+0079   1283           00213 BCF STATUS,RP0  ;BANCO 0
+Warning[203]: Found opcode in column 1. (BCF)
+007A   110B           00214 BCF INTCON,T0IF ;PONGO EN 0 EL BIT T0IF (DEL TMR0)
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-Warning[203]: Found opcode in column 1. (BCF)
-0079   1283           00217 BCF STATUS,RP0  ;BANCO 0
-Warning[203]: Found opcode in column 1. (BCF)
-007A   110B           00218 BCF INTCON,T0IF ;PONGO EN 0 EL BIT T0IF (DEL TMR0)
 Warning[203]: Found opcode in column 1. (MOVLW)
-007B   3086           00219 MOVLW 0X86 ;LE PASO EL VALOR 134 (DECIMAL) AL TMR0 
+007B   3086           00215 MOVLW 0X86 ;LE PASO EL VALOR 134 (DECIMAL) AL TMR0 
 Warning[203]: Found opcode in column 1. (MOVWF)
-007C   0081           00220 MOVWF TMR0 ;PARA QUE EMPIECE A CONTAR DESDE ESE VALOR.  
-                      00221 
-                      00222         ;INICIALIZACION DE VARIABLES
-007D   01A5           00223         clrf BCDH
-007E   01A6           00224         clrf BCDM
-007F   01A7           00225         clrf BCDL
-0080   30FD           00226         MOVLW b'11111101'
-0081   0088           00227         MOVWF PORTD
-0082   0008           00228         return
-                      00229 ;FIN INIT
+007C   0081           00216 MOVWF TMR0 ;PARA QUE EMPIECE A CONTAR DESDE ESE VALOR.  
+                      00217 
+                      00218         ;INICIALIZACION DE VARIABLES
+007D   01A5           00219         clrf BCDH
+007E   01A6           00220         clrf BCDM
+007F   01A7           00221         clrf BCDL
+0080   30FD           00222         MOVLW b'11111101'
+0081   0088           00223         MOVWF PORTD
+0082   0008           00224         return
+                      00225 ;FIN INIT
 Warning[203]: Found opcode in column 1. (return)
-0083   0008           00230 return
+0083   0008           00226 return
 Warning[205]: Found directive in column 1. (end)
-                      00231 end
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  7
+                      00227 end
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  7
 
 
 SYMBOL TABLE
@@ -379,7 +375,7 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CKE                               00000006
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  8
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  8
 
 
 SYMBOL TABLE
@@ -405,7 +401,6 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-ENTER                             00000028
 F                                 00000001
 FERR                              00000002
 FSR                               00000004
@@ -438,13 +433,13 @@ NOT_RBPU                          00000007
 NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE  9
+NOT_TX8                           00000006
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-NOT_TX8                           00000006
 NOT_W                             00000002
 NOT_WRITE                         00000002
 OBF                               00000006
@@ -497,13 +492,13 @@ RBIF                              00000000
 RC0                               00000000
 RC1                               00000001
 RC2                               00000002
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE 10
+RC3                               00000003
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-RC3                               00000003
 RC4                               00000004
 RC5                               00000005
 RC6                               00000006
@@ -556,13 +551,13 @@ SSPM3                             00000003
 SSPOV                             00000006
 SSPSTAT                           00000094
 STATUS                            00000003
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE 11
+SUMA_10                           0000001B
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-SUMA_10                           0000001B
 SUMA_100                          00000012
 SYNC                              00000004
 T0CS                              00000005
@@ -615,13 +610,13 @@ TRISB7                            00000007
 TRISC                             00000087
 TRISC0                            00000000
 TRISC1                            00000001
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE 12
+TRISC2                            00000002
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-TRISC2                            00000002
 TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
@@ -674,13 +669,13 @@ _IDLOC0                           00002000
 _IDLOC1                           00002001
 _IDLOC2                           00002002
 _IDLOC3                           00002003
-MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:16:59         PAGE 13
+_LP_OSC                           00003FFC
+MPASM  5.40                      RECEPTOR.ASM   9-1-2016  19:57:49         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-_LP_OSC                           00003FFC
 _LVP_OFF                          00003F7F
 _LVP_ON                           00003FFF
 _PWRTE_OFF                        00003FFF
@@ -694,16 +689,12 @@ _XT_OSC                           00003FFD
 __16F877                          00000001
 __DEBUG                           1
 convert_dato                      00000009
-dato                              00000022
 fin_isr                           00000051
 inicio                            00000005
 init                              00000053
 isr                               00000020
 main                              00000006
 recibiAlgo                        0000004C
-reg1                              00000029
-reg2                              00000030
-reg3                              00000031
 
 Errors   :     0
 Warnings :    26 reported,     0 suppressed
