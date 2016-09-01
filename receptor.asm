@@ -1,51 +1,31 @@
 ;edu tp pcp-usart (KAIZEN)
 #include <P16F877.INC>
 
-contTA  EQU 0X23 ; contador de tiempo de adquisicion para empezar a recibir datos del ADC
-BIN 	EQU 0X24 ; resultado de la conversion del ADC (convertion result)
+dato 	EQU	0x22
+BIN		EQU	0x24
 BCDH	EQU	0x25
 BCDM	EQU	0x26
 BCDL	EQU	0x27
-reg1	EQU	0x28
-reg2	EQU	0X29
+ENTER	EQU 0x28
+reg1	EQU	0x29
+reg2	EQU	0X30
+reg3	EQU 0x31
 
 ORG 0X0000
 goto inicio
 ORG 0x0004
-call isr
+goto isr
 
 ORG 0x0005
 inicio
  	call init
-	call main
-
-
 ;PROGRAMA PRINCIPAL
 main
 	NOP
 	CLRWDT ; por las dudas :D
-	
-	;BANKSEL PIR1
-	;WaitRX
-	;	btfss PIR1,RCIF
-	;goto WaitRX
-
-
 ;Fin main
 goto main
 
-TABLA
-		addwf	PCL, 1
-		retlw	d'63'  ;0
-		retlw	d'6'   ;1
-		retlw	d'91'  ;2
-		retlw	d'79'  ;3
-		retlw	d'102' ;4
-		retlw	d'109' ;5
-		retlw	d'125' ;6
-		retlw	d'7'   ;7
-		retlw	d'127' ;8
-		retlw	d'103' ;9
 
 convert_dato
         clrf    BCDH
@@ -79,65 +59,74 @@ convert_dato
 return
 
  		
-delay
-	clrf reg1
-	clrf reg2
-	cont_delay	
-		incfsz reg1
-		goto cont_delay
-		incfsz reg2
-		goto cont_delay
-return	 
 
 isr
-	;Pagina 00 (BANK 0)
-	bcf STATUS,RP0
-	bcf STATUS,RP1
-
 	bcf	INTCON,GIE
+	BTFSC INTCON,T0IF ;SALTA SI NO ES LA INTERRUPCION DEL TIMER
+	GOTO INTERRUPCION_TIMER
 	btfsc PIR1,RCIF
 	goto recibiAlgo ; si RCIF esta en 1
-	btfsc PIR1,TXIF
-	goto transmitiAlgo ; si TXIF esta en 1
 	goto fin_isr
+
+INTERRUPCION_TIMER
+	;REESTABLECER TIMER (PARA QUE VUELVA A INTERRUMPIR DESPUES DE 2 MSEG)
+	BCF INTCON,T0IF ;PONGO EN 0 EL BIT T0IF (DEL TMR0)
+	MOVLW 0X86 ;LE PASO EL VALOR 134 (DECIMAL) AL TMR0 
+	MOVWF TMR0 ;PARA QUE EMPIECE A CONTAR EL TMR0 DESDE ESE VALOR.
+
+	BSF STATUS,C
+	RLF PORTD
+	BTFSC PORTD, 3	;SALTA UNA INSTRUCCION SI EL BIT 6 DE PORTC ES 0, OSEA QUE TIENE QUE VOLVER A PONER EN 0 EL BIT 0 PARA MOSTRAR SEGUNODS_UNIDAD
+	GOTO DISPLAY1
+	MOVLW b'11111110'
+	MOVWF PORTD 
+
+	DISPLAY1 ;REFRESCA EL VALOR DE DISPLAY1 (EL BCDL) (SI LO TIENE QUE HACER)
+		BTFSC PORTD,0 ;SALTA SI TIENE QUE MOSTRAR BCDL
+		GOTO DISPLAY2
+		MOVF BCDL,W
+		CALL TABLA
+		MOVWF PORTB
+		GOTO fin_isr
+
+	DISPLAY2 ;REFRESCA EL VALOR DE DISPLAY2 (EL BCDM) (SI LO TIENE QUE HACER)
+		BTFSC PORTD,1 ;SALTA SI TIENE QUE MOSTRAR BCDM
+		GOTO DISPLAY3
+		MOVF BCDM,W
+		CALL TABLA
+		MOVWF PORTB
+		GOTO fin_isr
+
+	DISPLAY3 ;REFRESCA EL VALOR DE DISPLAY3 (EL BCDH) (SI LO TIENE QUE HACER)
+		BTFSC PORTD,2 ;SALTA SI TIENE QUE MOSTRAR BCDH
+		GOTO fin_isr
+		MOVF BCDH,W
+		CALL TABLA
+		MOVWF PORTB
+		GOTO fin_isr
+
+
+TABLA
+		addwf	PCL, 1
+		retlw	d'63'  ;0
+		retlw	d'6'   ;1
+		retlw	d'91'  ;2
+		retlw	d'79'  ;3
+		retlw	d'102' ;4
+		retlw	d'109' ;5
+		retlw	d'125' ;6
+		retlw	d'7'   ;7
+		retlw	d'127' ;8
+		retlw	d'103' ;9
+	
 
 recibiAlgo
-	
-	BANKSEL RCREG
+	bcf PIR1,RCIF
 	movf RCREG,W
-	BANKSEL BIN
 	movwf BIN
 	call convert_dato; genero BCDL, BCDM y BCDH
-	BCF PORTD,RD0
-	MOVFW BCDL 
-	call TABLA
-	MOVWF PORTB
-	BSF PORTD,RD0
-	call delay;delay
-	BCF PORTD,RD1
-	MOVFW BCDM 
-	call TABLA
-	MOVWF PORTB
-	BSF PORTD,RD1
-	call delay;delay
-	BCF PORTD,RD2
-	MOVFW BCDH 
-	call TABLA
-	MOVWF PORTB
-	BSF PORTD,RD2
-	call delay;delay
-	BCF PORTD,RD3
-	MOVLW 0x00 
-	call TABLA
-	MOVWF PORTB
-	BSF PORTD,RD3
- 	call delay;delay
-	bcf PIR1,RCIF
 	goto fin_isr
 
-transmitiAlgo
-	bcf PIR1,TXIF
-	goto fin_isr
 
 fin_isr
  	bsf		INTCON,GIE 	
@@ -172,16 +161,16 @@ init
 	;TX y RX
 	bcf	TRISC,6 ;TX como salida  (OUTPUT)
  	bsf	TRISC,7 ;RX como entrada (INPUT)
-	;The rate at which data is transmitted or received must be always be set using the
-	;baud rate generator unless the USART is being used in synchronous slave mode.
-	;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
-	movlw	d'25'
- 	movwf	SPBRG	; 9600 baudios en high speed con 4MHz
 	;Configuro el TXSTA
     clrf TXSTA
 	bsf TXSTA,TRMT  ;TRMT: Transmit Shift Register Status bit, 1 = TSR empty
 	bsf TXSTA,BRGH  ;High speed
 	bsf TXSTA,TXEN  ;Transmision habilitada
+	;The rate at which data is transmitted or received must be always be set using the
+	;baud rate generator unless the USART is being used in synchronous slave mode.
+	;Configuro la velocidad de transmision/recepcion (baudios = bit/segundo (?))
+	movlw	d'25'
+ 	movwf	SPBRG	; 9600 baudios en high speed con 4MHz
 	
 	;Pagina 00 (BANK 0)
  	bcf	STATUS,RP0
@@ -201,16 +190,42 @@ init
  	bcf	STATUS,RP1
 	;Habilito int de recepcion, la int de transmision no hace falta ya que tomamos accion solo al recibir un dato. 
  	bsf	PIE1,RCIE 	;Habilito int de recepcion
-	;bsf PIE1,TXIE	;Habilito int de transmision (preguntar)
  
+
 	;Pagina 00 (BANK 0)
  	bcf	STATUS,RP0
  	bcf	STATUS,RP1
+	bsf INTCON,T0IE	;HABILITA EL TMR0
  	bsf	INTCON, PEIE	; habilito int de perifericos
  	bsf	INTCON, GIE		; habilito int global	
 
 ; FIN INICIALIZACION DE INTERRUPCIONES
 
+;CONFIGURACION TIMER
+BSF STATUS,RP0		;BANCO 1 
+BCF OPTION_REG,T0CS ;USA EL OSCILADOR INTERNO (Fosc/4)
+BCF OPTION_REG,PSA	;HABILITA EL PRESCALER
+
+;VALOR DEL PRESCALER 001
+BCF OPTION_REG,PS2 ;BIT 2 DEL PRESCALER EN 0
+BCF OPTION_REG,PS1 ;BIT 1 DEL PRESCALER EN 0
+BSF OPTION_REG,PS0 ;BIT 0 DEL PRESCALER EN 1
+
+
+	
+;INICIALIZACION DEL TMR0
+BCF STATUS,RP0	;BANCO 0
+BCF INTCON,T0IF ;PONGO EN 0 EL BIT T0IF (DEL TMR0)
+MOVLW 0X86 ;LE PASO EL VALOR 134 (DECIMAL) AL TMR0 
+MOVWF TMR0 ;PARA QUE EMPIECE A CONTAR DESDE ESE VALOR.	
+
+	;INICIALIZACION DE VARIABLES
+	clrf BCDH
+	clrf BCDM
+	clrf BCDL
+	MOVLW b'11111101'
+	MOVWF PORTD
+ 	return
 ;FIN INIT
 return
 end
