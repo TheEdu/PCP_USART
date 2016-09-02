@@ -8,5 +8,6 @@ luego comunica ese valor al otro PIC para que lo muestre atravez de un display
 
 
 http://ww1.microchip.com/downloads/en/DeviceDoc/usart.pdf
+
 http://ww1.microchip.com/downloads/en/DeviceDoc/adc.pdf
 
